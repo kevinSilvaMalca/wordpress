@@ -3,7 +3,7 @@ version: "2"
 services:
   wordpress-db:
     container_name: wordpress-db
-    image: mariadb:latest
+    image: mysql:5.7
     restart: unless-stopped
     volumes:
       - /usr/local/volumes/mysql:/var/lib/mysql
@@ -17,7 +17,7 @@ services:
     depends_on:
       - wordpress-db
     container_name: wordpress
-    image: wordpress:latest
+    image: wordpress:5.4.1-php7.4-apache
     restart: unless-stopped
     volumes:
       - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
