@@ -34,8 +34,8 @@ services:
       VIRTUAL_HOST: prueba.apps.com.pe,www.prueba.apps.com.pe
       LETSENCRYPT_HOST: prueba.apps.com.pe,www.prueba.apps.com.pe
       LETSENCRYPT_EMAIL: kevin.silva@acceso.com.pe
-    command: 
-      - apache2 -D FOREGROUND
+    # command: 
+    #   - apache2 -D FOREGROUND
 
   wpcli:
     image: tatemz/wp-cli
