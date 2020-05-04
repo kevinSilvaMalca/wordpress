@@ -20,8 +20,8 @@ services:
     image: wordpress:latest
     restart: unless-stopped
     volumes:
-      - /usr/local/volumes/wordpress/core/files:/var/www/html
-      - /usr/local/volumes/wordpress/wp-content:/var/www/html/wp-content
+      - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
+      - /usr/local/volumes/wordpress/data/site/wp-content:/var/www/html/wp-content
       - ./conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
@@ -32,13 +32,13 @@ services:
       VIRTUAL_HOST: prueba.apps.com.pe,www.prueba.apps.com.pe
       LETSENCRYPT_HOST: prueba.apps.com.pe,www.prueba.apps.com.pe
       LETSENCRYPT_EMAIL: kevin.silva@acceso.com.pe
-  
+
   wpcli:
-     image: tatemz/wp-cli
-     container_name: wordpress-wp-cli
-     volumes:
-       - /usr/local/volumes/wordpress/core/files:/var/www/html
-       - /usr/local/volumes/wordpress/wp-content:/var/www/html/wp-content
-     depends_on:
-       - wordpress-db
-     entrypoint: wp
+    image: tatemz/wp-cli
+    container_name: wordpress-wp-cli
+    volumes:
+      - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
+      - /usr/local/volumes/wordpress/data/site/wp-content:/var/www/html/wp-content
+    depends_on:
+      - wordpress-db
+    entrypoint: wp
