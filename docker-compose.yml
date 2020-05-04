@@ -1,0 +1,44 @@
+version: "2"
+
+services:
+  wordpress-db:
+    container_name: wordpress-db
+    image: mariadb:latest
+    restart: unless-stopped
+    volumes:
+      - /usr/local/volumes/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+
+  wordpress:
+    depends_on:
+      - wordpress-db
+    container_name: wordpress
+    image: wordpress:latest
+    restart: unless-stopped
+    volumes:
+      - /usr/local/volumes/wordpress/core/files:/var/www/html
+      - /usr/local/volumes/wordpress/wp-content:/var/www/html/wp-content
+      - ./conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
+    environment:
+      WORDPRESS_DB_HOST: wordpress-db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_TABLE_PREFIX: wp_
+      VIRTUAL_HOST: prueba.apps.com.pe,www.prueba.apps.com.pe
+      LETSENCRYPT_HOST: prueba.apps.com.pe,www.prueba.apps.com.pe
+      LETSENCRYPT_EMAIL: kevin.silva@acceso.com.pe
+  
+  wpcli:
+     image: tatemz/wp-cli
+     container_name: wordpress-wp-cli
+     volumes:
+       - /usr/local/volumes/wordpress/core/files:/var/www/html
+       - /usr/local/volumes/wordpress/wp-content:/var/www/html/wp-content
+     depends_on:
+       - wordpress-db
+     entrypoint: wp
