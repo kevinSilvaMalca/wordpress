@@ -20,7 +20,7 @@ services:
     image: wordpress:php7.4
     restart: always
     expose: 
-      - "a"
+      - "80"
     volumes:
       - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
       - /usr/local/volumes/wordpress/data/site/wp-content:/var/www/html/wp-content
