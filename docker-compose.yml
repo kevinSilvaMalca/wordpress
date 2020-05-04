@@ -17,7 +17,7 @@ services:
     depends_on:
       - wordpress-db
     container_name: wordpress
-    image: wordpress:5.4.1-php7.4-apache
+    image: wordpress:5.4.1-php7.4
     restart: unless-stopped
     volumes:
       - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
