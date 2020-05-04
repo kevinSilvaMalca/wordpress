@@ -17,7 +17,7 @@ services:
     depends_on:
       - wordpress-db
     container_name: wordpress
-    image: wordpress:php7.4
+    image: wordpress:latest
     restart: always
     expose:
       - "80"
