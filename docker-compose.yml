@@ -4,7 +4,7 @@ services:
   wordpress-db:
     container_name: wordpress-db
     image: mysql:5.7
-    restart: unless-stopped
+    restart: always
     volumes:
       - /usr/local/volumes/mysql:/var/lib/mysql
     environment:
@@ -18,7 +18,7 @@ services:
       - wordpress-db
     container_name: wordpress
     image: wordpress:php7.4
-    restart: unless-stopped
+    restart: always
     volumes:
       - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
       - /usr/local/volumes/wordpress/data/site/wp-content:/var/www/html/wp-content
@@ -40,5 +40,6 @@ services:
       - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
       - /usr/local/volumes/wordpress/data/site/wp-content:/var/www/html/wp-content
     depends_on:
+      - wordpress
       - wordpress-db
     entrypoint: wp
