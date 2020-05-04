@@ -19,7 +19,7 @@ services:
     container_name: wordpress
     image: wordpress:php7.4
     restart: always
-    expose: 
+    expose:
       - "80"
     volumes:
       - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
@@ -45,3 +45,8 @@ services:
       - wordpress
       - wordpress-db
     entrypoint: wp
+
+networks:
+  default:
+    external:
+      name: nginxproxy_default
