@@ -1,54 +1,40 @@
-version: "2"
+version: '3.0'
 
 services:
-  wordpress-db:
-    container_name: wordpress-db
-    image: mysql:5.7
-    restart: always
-    volumes:
-      - /usr/local/volumes/mysql:/var/lib/mysql
+  mysql2:
+    container_name: mysql-2
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: root
+      MYSQL_DATABASE: wordpress-2
       MYSQL_PASSWORD: password
-
-  wordpress:
-    depends_on:
-      - wordpress-db
-    container_name: wordpress
-    image: wordpress:latest
-    restart: always
-    expose:
-      - "80"
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+    image: mariadb:latest
+    restart: unless-stopped
     volumes:
-      - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
-      - /usr/local/volumes/wordpress/data/site/wp-content:/var/www/html/wp-content
-      - ./conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
+    - /usr/local/volumes/mysql-2/:/var/lib/mysql:rw
+  wordpress2:
+    container_name: wordpress-2
+    depends_on:
+    - mysql2
     environment:
-      WORDPRESS_DB_HOST: wordpress-db:3306
-      WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DB_USER: root
+      LETSENCRYPT_EMAIL: kevin.silva.095@gmail.com
+      LETSENCRYPT_HOST: ecommerce.apps.com.pe,www.ecommerce.apps.com.pe
+      VIRTUAL_HOST: ecommerce.apps.com.pe,www.ecommerce.apps.com.pe
+      WORDPRESS_DB_HOST: mysql2:3306
+      WORDPRESS_DB_NAME: wordpress-2
       WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_DB_USER: root
       WORDPRESS_TABLE_PREFIX: wp_
-      VIRTUAL_HOST: prueba.apps.com.pe,www.prueba.apps.com.pe
-      LETSENCRYPT_HOST: prueba.apps.com.pe,www.prueba.apps.com.pe
-      LETSENCRYPT_EMAIL: kevin.silva@acceso.com.pe
-      APACHE_RUN_DIR: /var/run/apache2 
-    # command: apache2 -D FOREGROUND
-
-  wpcli:
-    image: tatemz/wp-cli
-    container_name: wordpress-wp-cli
+    image: wordpress:latest
+    logging:
+      options:
+        max-size: 200k
+    restart: unless-stopped
     volumes:
-      - /usr/local/volumes/wordpress/data/site/wordpress-core:/var/www/html
-      - /usr/local/volumes/wordpress/data/site/wp-content:/var/www/html/wp-content
-    depends_on:
-      - wordpress
-      - wordpress-db
-    entrypoint: wp
+    - /usr/local/volumes/wordpress-2/wordpress-core:/var/www/html:rw
+    - ./conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:rw
 
 networks:
   default:
     external:
-      name: nginxproxy_default
+      name: webproxy
