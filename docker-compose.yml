@@ -34,7 +34,7 @@ services:
       LETSENCRYPT_HOST: cakezone.apps.com.pe, www.cakezone.apps.com.pe
       LETSENCRYPT_EMAIL: kevin.silva.095@gmail.com
       APACHE_RUN_DIR: /var/run/apache2
-    command: apache2 -D FOREGROUND
+    # command: apache2 -D FOREGROUND
 
 networks:
   default:
