@@ -1,40 +1,42 @@
-version: '3.0'
+version: "3"
 
 services:
-  mysql2:
-    container_name: mysql-2
+  mysqlCakezone:
+    container_name: mysqlCakezone
+    image: mysql:5.7
+    restart: always
+    volumes:
+      - /usr/local/volumes/mysqlCakezone:/var/lib/mysql
     environment:
-      MYSQL_DATABASE: wordpress-2
-      MYSQL_PASSWORD: password
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: cakezone
       MYSQL_USER: root
-    image: mariadb:latest
-    restart: unless-stopped
-    volumes:
-    - /usr/local/volumes/mysql-2/:/var/lib/mysql:rw
-  wordpress2:
-    container_name: wordpress-2
+      MYSQL_PASSWORD: password
+
+  wordpressCakezone:
     depends_on:
-    - mysql2
-    environment:
-      LETSENCRYPT_EMAIL: kevin.silva.095@gmail.com
-      LETSENCRYPT_HOST: ecommerce.apps.com.pe,www.ecommerce.apps.com.pe
-      VIRTUAL_HOST: ecommerce.apps.com.pe,www.ecommerce.apps.com.pe
-      WORDPRESS_DB_HOST: mysql2:3306
-      WORDPRESS_DB_NAME: wordpress-2
-      WORDPRESS_DB_PASSWORD: password
-      WORDPRESS_DB_USER: root
-      WORDPRESS_TABLE_PREFIX: wp_
+      - mysqlCakezone
+    container_name: wordpressCakezone
     image: wordpress:latest
-    logging:
-      options:
-        max-size: 200k
-    restart: unless-stopped
+    restart: always
+    expose:
+      - "80"
     volumes:
-    - /usr/local/volumes/wordpress-2/wordpress-core:/var/www/html:rw
-    - ./conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:rw
+      - /usr/local/volumes/wordpressCakezone/var/www/html:/var/www/html
+      - ./conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
+    environment:
+      WORDPRESS_DB_HOST: mysqlCakezone:3306
+      WORDPRESS_DB_NAME: cakezone
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: password
+      WORDPRESS_TABLE_PREFIX: wp_
+      VIRTUAL_HOST: cakezone.apps.com.pe, www.cakezone.apps.com.pe
+      LETSENCRYPT_HOST: cakezone.apps.com.pe, www.cakezone.apps.com.pe
+      LETSENCRYPT_EMAIL: kevin.silva.095@gmail.com
+      APACHE_RUN_DIR: /var/run/apache2
+    command: apache2 -D FOREGROUND
 
 networks:
   default:
     external:
-      name: webproxy
+      name: nginx-proxy_nginx-proxy
