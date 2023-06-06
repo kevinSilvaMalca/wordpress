@@ -1,37 +1,37 @@
 version: "3"
 
 services:
-  mysqlCakezone:
-    container_name: mysqlCakezone
+  mysqlihgroup:
+    container_name: mysqlihgroup
     image: mysql:5.7
     restart: always
     volumes:
-      - /usr/local/volumes/mysqlCakezone:/var/lib/mysql
+      - /usr/local/volumes/mysqlihgroup:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: cakezone
+      MYSQL_DATABASE: ihgroup
       MYSQL_USER: root
       MYSQL_PASSWORD: password
 
-  wordpressCakezone:
+  wordpressihgroup:
     depends_on:
-      - mysqlCakezone
-    container_name: wordpressCakezone
+      - mysqlihgroup
+    container_name: wordpressihgroup
     image: wordpress:latest
     restart: always
     expose:
       - "80"
     volumes:
-      - /usr/local/volumes/wordpressCakezone/var/www/html:/var/www/html
+      - /usr/local/volumes/wordpressihgroup/var/www/html:/var/www/html
       - ./conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
     environment:
-      WORDPRESS_DB_HOST: mysqlCakezone:3306
-      WORDPRESS_DB_NAME: cakezone
+      WORDPRESS_DB_HOST: mysqlihgroup:3306
+      WORDPRESS_DB_NAME: ihgroup
       WORDPRESS_DB_USER: root
       WORDPRESS_DB_PASSWORD: password
       WORDPRESS_TABLE_PREFIX: wp_
-      VIRTUAL_HOST: cakezone.apps.com.pe, www.cakezone.apps.com.pe
-      LETSENCRYPT_HOST: cakezone.apps.com.pe, www.cakezone.apps.com.pe
+      VIRTUAL_HOST: ihgroup.pe, www.ihgroup.pe
+      LETSENCRYPT_HOST: ihgroup.pe, www.ihgroup.pe
       LETSENCRYPT_EMAIL: kevin.silva.095@gmail.com
       APACHE_RUN_DIR: /var/run/apache2
     # command: apache2 -D FOREGROUND
